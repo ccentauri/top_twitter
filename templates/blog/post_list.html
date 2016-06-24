@@ -1,0 +1,111 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+{% include STATIC_URL %}
+
+
+{% block content %}
+    <script type="text/javascript">
+        function openInNewTab(url) {
+            var win = window.open(url, '_blank');
+            win.focus();
+        }
+    </script>
+
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+
+        .mdl-card-wide.mdl-card {
+            width: 800px;
+            height: auto;
+
+            margin: 2%;
+
+            overflow: visible;
+        }
+
+        .mdl-card-wide > .mdl-card__title {
+            color: #fff;
+
+            position: relative;
+
+            height: 400px;
+            width: 100%;
+        }
+
+        .mdl-card-wide > .mdl-card__supporting-text {
+            margin-right: 40px;
+        }
+
+        .mdl-button--fab {
+            position: absolute;
+            right: 16px;
+            top: 372px;
+        }
+
+        .mdl-card-wide > .mdl-card__menu {
+            color: #fff;
+        }
+
+        .content-grid {
+            max-width: 80%;
+        }
+    </style>
+
+        {% for app in apps %}
+            <!-- Wide card with share menu button -->
+                <div class="mdl-card-wide mdl-card mdl-shadow--8dp">
+                    <div class="mdl-card__title"
+                         style="background: url({{ app.preview_image.url }})  no-repeat;
+                                 background-size: 100% 100%">
+
+                        <a style="position:absolute; width: 100%; height: 100%;"
+                           href="{{ SITE_URL }}/apps/{{ app.id }}">
+                        </a>
+
+                        <h2 class="mdl-card__title-text">
+                            {{ app.title }}
+                        </h2>
+
+                        <!-- Colored FAB button -->
+                        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
+                                onclick="openInNewTab('{{ app.link_source }}')">
+                            <i class="material-icons">code</i>
+                        </button>
+                    </div>
+
+                    <div class="mdl-card__supporting-text" align="left">
+                        {{ app.description }}
+                    </div>
+
+                    <div class="mdl-card__menu">
+                        <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                            <!-- Right aligned menu below button -->
+                            <button id="demo-menu-lower-right_{{ app.id }}"
+                                    class="mdl-button mdl-js-button mdl-button--icon">
+                                <i class="material-icons">more_vert</i>
+                            </button>
+
+                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                                for="demo-menu-lower-right_{{ app.id }}">
+                                <li class="mdl-menu__item">Share</li>
+                                <li class="mdl-menu__item">Read more</li>
+                                <li disabled class="mdl-menu__item">Download .apk</li>
+                                <li class="mdl-menu__item">Github</li>
+                            </ul>
+                        </button>
+                    </div>
+                </div>
+
+            {# Get all related Objects (Screenshots) from class #}
+            {#        {% for screenshot in app.screenshot_set.all %}#}
+            {#            {{ screenshot.file.url }}#}
+            {#            <br>#}
+            {#        {% endfor %}#}
+
+        {% endfor %}
+
+{% endblock content %}

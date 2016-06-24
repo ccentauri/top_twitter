@@ -1,0 +1,16 @@
+{% extends 'top_twitter/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <script type="text/javascript">
+        function openInNewTab(url) {
+            var win = window.open(url, '_blank');
+            win.focus();
+        }
+    </script>
+
+    {% for hashtag in hashtags %}
+        <a href="{{ hashtag.url }}" target="_blank"> {{ hashtag.name }}</a>
+        <br/>
+    {% endfor %}
+{% endblock %}

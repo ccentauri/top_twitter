@@ -1,0 +1,154 @@
+{% extends 'top_twitter/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <script type="text/javascript">
+        function openInNewTab(url) {
+            var win = window.open(url, '_blank');
+            win.focus();
+        }
+        function reloadPage() {
+            location.reload()
+        }
+    </script>
+
+    <style>
+        .card-square.mdl-card {
+            width: 30%;
+            height: auto;
+        }
+
+        .mdl-card__actions {
+            display: flex;
+            box-sizing: border-box;
+            align-items: center;
+        }
+
+        .card-square > .mdl-card__title > .user-profile-image-wrapper > .user_profile_link {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+
+            z-index: 1;
+        }
+
+        .card-square > .mdl-card__supporting-text {
+            margin-top: 16px;
+            max-width: 80%;
+        }
+
+        .user-profile-image-wrapper {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+
+        .user-profile-image {
+            width: auto;
+            height: auto;
+            border-radius: 50%;
+            position: absolute;
+            left: 16px;
+            bottom: -24px;
+        }
+
+        .user-name {
+            position: absolute;
+            left: 72px;
+            bottom: -30px;
+        }
+
+        .mdl-grid {
+            width: 80%;
+            text-align: center;
+        }
+
+        .error_box {
+            width: 100%;
+            height: 100%;
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+            padding: 70px 0;
+        }
+    </style>
+
+    {% if error %}
+        <div class="error_box">
+            <h3>Error occurred. Please, try again later.</h3>
+            <button class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect"
+                    onclick="reloadPage()">
+                Reload page
+            </button>
+        </div>
+    {% endif %}
+
+    <div class="mdl-grid" align="center">
+
+        {% for tweet in tweets %}
+            <div class="card-square mdl-card mdl-shadow--4dp mdl-cell mdl-cell--1-col">
+
+                <div class="mdl-card__title mdl-card--expand"
+                     style="
+                             height: 100px;
+                             width: 100%;
+                             color: #fff;
+                             padding: 0;
+                             background: url(
+                             {% if tweet.user.profile_banner_url %}
+                                 {{ tweet.user.profile_banner_url }}
+                             {% elif tweet.user.profile_background_image_url %}
+                                 {{ tweet.user.profile_background_image_url }}
+                             {% else %}
+                                 {% with "#"|add:tweet.user.profile_background_color as user_bg_color %}
+                                     {{ user_bg_color }}
+                                 {% endwith %}
+                             {% endif %}
+                             );
+                             background-size: contain">
+
+                    <div class="user-profile-image-wrapper">
+                        {% with "https://twitter.com/"|add:tweet.user.screen_name as user_profile_url %}
+                            <a class="user_profile_link" target="_blank"
+                               href="{{ user_profile_url }}">
+                                <img class="user-profile-image" src="{{ tweet.user.profile_image_url }}">
+                                {#                                <h6 class="user-name">#}
+                                {#                                    {% with "@"|add:tweet.user.screen_name as user_screen_name %}#}
+                                {#                                        {{ user_screen_name }}#}
+                                {#                                    {% endwith %}#}
+                                {#                                </h6>#}
+                            </a>
+                        {% endwith %}
+                    </div>
+
+                </div>
+
+                <div class="mdl-card__supporting-text">
+                    {{ tweet.text|safe }}
+                </div>
+
+                <div class="mdl-card__actions mdl-card--border">
+                    {% with "https://twitter.com/FifthHarmony/status/"|add:tweet.id_str as tweet_url %}
+                        <a class="mdl-button mdl-js-button mdl-js-ripple-effect"
+                           target="_blank"
+                           href="{{ tweet_url }}">Read more</a>
+                    {% endwith %}
+
+                    <div class="mdl-layout-spacer"></div>
+                    <button class="mdl-button mdl-button--icon"><i class="material-icons">favorite</i></button>
+                    <button id="share-post-{{ tweet.id }}" class="mdl-button mdl-button--icon"><i
+                            class="material-icons">share</i>
+                    </button>
+                    <ul class="mdl-menu mdl-menu--top-right mdl-js-menu" for="share-post-{{ tweet.id }}">
+                        <li class="mdl-menu__item">Facebook</li>
+                        <li class="mdl-menu__item">Twitter</li>
+                        <li class="mdl-menu__item">Pinterest</li>
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+{% endblock %}

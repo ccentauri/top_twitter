@@ -1,0 +1,184 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+{% include STATIC_URL %}
+
+
+{% block content %}
+
+    <!-- Wide card with share menu button -->
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+
+        .mdl-card-wide.mdl-card {
+            width: 60%;
+            height: auto;
+
+            margin: 2%;
+
+            overflow: visible;
+
+            max-width: 100%;
+        }
+
+        .mdl-card-wide > .mdl-card__title {
+            color: #fff;
+
+            height: 150px;
+            width: 100%;
+        }
+
+        .mdl-card-wide > .mdl-card__title > .title {
+            color: #fff;
+
+            margin-left: 15%;
+            margin-top: 50px;
+        }
+
+        .mdl-card__media {
+            background-color: inherit;
+            height: auto;
+            width: 100%;
+
+            padding: 7% 5% 2%;
+        }
+
+        .mdl-button--fab {
+            position: absolute;
+            right: 5%;
+            top: 175px;
+        }
+
+        .app_icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 100px;
+            -webkit-border-radius: 100px;
+            -moz-border-radius: 100px;
+
+            /* Shadow */
+            box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+            -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+            -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+
+            position: absolute;
+            top: 100px;
+            left: 5%;
+        }
+
+        .app_icon img {
+        }
+
+        .mdl-card-wide > .mdl-card__menu {
+            color: #fff;
+        }
+
+        blockquote {
+            display: block;
+            background: inherit;
+            padding: 15px 20px 15px 55px;
+            margin-left: 2%;
+            margin-right: 2%;
+            position: relative;
+
+            /*Font*/
+            font-family: 'Lato', sans-serif;
+            font-size: 14px;
+            line-height: 1.2;
+            color: #626262;
+            text-align: justify;
+
+            /*Borders - (Optional)*/
+            border-left: 15px solid #607D8B;
+            border-right: 2px solid #607D8B;
+
+            /*Box Shadow - (Optional)*/
+            -moz-box-shadow: 2px 2px 15px #ccc;
+            -webkit-box-shadow: 2px 2px 15px #ccc;
+            box-shadow: 2px 2px 15px #ccc;
+        }
+
+        blockquote::before {
+            content: "\201C"; /*Unicode for Left Double Quote*/
+
+            /*Font*/
+            font-family: Georgia, serif;
+            font-size: 60px;
+            font-weight: bold;
+            color: #999;
+
+            /*Positioning*/
+            position: absolute;
+            left: 10px;
+            top: 5px;
+        }
+
+        blockquote::after {
+            /*Reset to make sure*/
+            content: "";
+        }
+
+        blockquote a {
+            text-decoration: none;
+            background: #eee;
+            cursor: pointer;
+            padding: 0 3px;
+            color: #607D8B;
+        }
+
+        blockquote a:hover {
+            color: #666;
+        }
+
+        blockquote em {
+            font-style: italic;
+        }
+
+    </style>
+
+    <div class="mdl-card-wide mdl-card">
+
+        <div class="mdl-card__title mdl-shadow--16dp"
+             style="background-color: {{ app.color_primary }}">
+
+            <div class="title">
+                <h2>
+                    {{ app.title }}
+                </h2>
+            </div>
+
+            <div class="app_icon" style="background: white">
+                <img src="http://207.244.95.136/images/lock.png" height="100%" width="100%">
+            </div>
+
+            <!-- Colored FAB button -->
+            <!-- <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+                 <i class="material-icons">code</i>
+             </button>-->
+        </div>
+
+        <!-- <div class="mdl-card__actions mdl-card--border">
+             <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                 Contact
+             </a>
+         </div>-->
+
+        <div class="mdl-card__media mdl-shadow--16dp">
+            <p align="left">
+                {{ app.description }}
+            </p>
+
+            {{ app.article|safe }}
+
+            {% for screenshot in app.screenshot_set.all %}
+                <img src="{{ screenshot.file.url }}"
+                     style="height:auto; max-width: 30%; padding-right: 5%; padding-left: 5%; padding-top: 2%">
+            {% endfor %}
+
+        </div>
+    </div>
+
+{% endblock content %}
