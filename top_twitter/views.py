@@ -14,7 +14,7 @@ def post_list(request):
                       settings.ACCESS_TOKEN_SECRET)
 
     # Try to get top hashtags.
-    # Catch TwitterError ('Rate limit exceeded', etc)
+    # Catching TwitterError ('Rate limit exceeded', etc)
     try:
         trends = api.GetTrendsWoeid(woeid=1)
     except TwitterError:
@@ -27,16 +27,29 @@ def post_list(request):
 
     # Check if we have any hashtags in list
     if trends:
+        # Get only first 10 top-hashtags and delete rest
+        del trends[9:len(trends) - 1]
+
         # Find the latest tweets for hashtag
-        # for trend in trends[0]:
-        tweets.extend(api.GetSearch(term=trends[0].query, count=settings.TWEETS_LOADING_NUMBER))
+        for trend in trends:
+            # Try to get tweets.
+            # Catching TwitterError ('Rate limit exceeded', etc)
+            try:
+                tweets.extend(
+                    api.GetSearch(result_type='popular', term=trend.query, count=settings.TWEETS_LOADING_NUMBER))
+            except TwitterError:
+                error = True
     else:
+        # If trends list is empty - error was occurred
         error = True
 
     return render(request,
                   'top_twitter/post_list.html',
-                  {'tweets': tweets,
-                   'error': error},
+                  {
+                      'tweets': tweets,
+                      'trends': trends,
+                      'error': error
+                  },
                   RequestContext(request))
 
 
@@ -48,3 +61,7 @@ def popular_hashtag(request):
     hashtags = api.GetTrendsWoeid(woeid=1)
     return render(request, 'top_twitter/popular_hashtag.html', {'hashtags': hashtags},
                   RequestContext(request))
+
+
+def angular(request):
+    return render(request, 'top_twitter/angular.html', RequestContext(request))

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'twitter',
+    'el_pagination',
 
     'top_twitter',
     'blog',
@@ -158,4 +159,4 @@ ACCESS_TOKEN_KEY = '707631903608868869-jvTlyWZChllWMzGOWEsyF0PFrVtLQrI'
 ACCESS_TOKEN_SECRET = 'hFqKoa54LF470kSRmzbxnmSkz4SlKBuZlbYfCumDEmLDf'
 
 # Tweets loading
-TWEETS_LOADING_NUMBER = 10  # How many tweets should be loaded for one hashtag
+TWEETS_LOADING_NUMBER = 1  # How many tweets should be loaded for one hashtag

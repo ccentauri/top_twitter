@@ -1,0 +1,73 @@
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+
+    <!-- Your application bootstrap  -->
+    <script type="text/javascript">
+        /**
+         * You must include the dependency on 'ngMaterial'
+         */
+        angular.module('firstApplication', ['ngMaterial']);
+    </script>
+</head>
+<body ng-app="firstApplication" ng-cloak>
+
+<md-toolbar class="md-warn">
+    <div class="md-toolbar-tools">
+        <h2 class="md-flex">HTML 5</h2>
+    </div>
+</md-toolbar>
+
+
+<div ng-controller="AppCtrl" layout="row" ng-cloak style="height: 300px">
+    <style>
+        .edgePadding {
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+    </style>
+    <div layout="column" layout-align="center center"
+         style="background-color: #f2f2f2" class="md-padding">
+        <span id="left">left</span>
+    </div>
+    <div layout="column" layout-align="center start" layout-padding flex>
+        <p class="inset">
+            A dialog can specify its origin and target with <code>openFrom</code> and
+            <code>closeTo</code> properties.
+            The options showFrom and closeTo can be specified as a string [where internally
+            querySelector( ) is used to perform the DOM element lookup],
+            element or an Rect object [with top, left, width, height fields].
+        </p>
+        <div class="dialog-demo-content" layout="column" layout-align="center center" style="width:100%">
+            <md-button class="md-primary md-raised edgePadding" ng-click="openFromLeft()">
+                Open From Left - Close To Right
+            </md-button>
+            <md-button class="md-primary md-raised edgePadding" ng-click="openOffscreen()">
+                Open From Top Left - Close Slide Down
+            </md-button>
+        </div>
+    </div>
+    <div layout="column" layout-align="center center"
+         style="background-color: #f2f2f2" class="md-padding">
+        <span id="right">right</span>
+    </div>
+</div>
+
+<md-button class="md-fab md-primary" md-theme="cyan" aria-label="Profile">
+    <md-icon icon="/img/icons/ic_people_24px.svg" style="width: 24px; height: 24px;"></md-icon>
+</md-button>
+
+</body>
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at http://material.angularjs.org/license.
+-->

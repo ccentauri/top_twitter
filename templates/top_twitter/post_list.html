@@ -1,5 +1,8 @@
 {% extends 'top_twitter/base.html' %}
 {% load staticfiles %}
+{% load twitter_tags %}
+{% load el_pagination_tags %}
+
 
 {% block content %}
     <script type="text/javascript">
@@ -126,7 +129,7 @@
                 </div>
 
                 <div class="mdl-card__supporting-text">
-                    {{ tweet.text|safe }}
+                    {{ tweet|expand_tweet_urls|urlize_tweet_text|safe }}
                 </div>
 
                 <div class="mdl-card__actions mdl-card--border">
@@ -137,18 +140,40 @@
                     {% endwith %}
 
                     <div class="mdl-layout-spacer"></div>
+
+                    {# Like button #}
                     <button class="mdl-button mdl-button--icon"><i class="material-icons">favorite</i></button>
+
+                    {# Share button #}
                     <button id="share-post-{{ tweet.id }}" class="mdl-button mdl-button--icon"><i
                             class="material-icons">share</i>
                     </button>
+
+                    {# Menu button #}
+                    <button id="menu-top-right-{{ tweet.id }}"
+                            class="mdl-button mdl-js-button mdl-button--icon">
+                        <i class="material-icons">more_vert</i>
+                    </button>
+
+                    {# Share button menu #}
                     <ul class="mdl-menu mdl-menu--top-right mdl-js-menu" for="share-post-{{ tweet.id }}">
                         <li class="mdl-menu__item">Facebook</li>
                         <li class="mdl-menu__item">Twitter</li>
                         <li class="mdl-menu__item">Pinterest</li>
                     </ul>
+
+                    {# Menu button menu #}
+                    <ul class="mdl-menu mdl-menu--top-right mdl-js-menu mdl-js-ripple-effect"
+                        data-mdl-for="menu-top-right-{{ tweet.id }}">
+                        <li class="mdl-menu__item">Source code</li>
+                        <li class="mdl-menu__item">Another Action</li>
+                        <li disabled class="mdl-menu__item">Disabled Action</li>
+                        <li class="mdl-menu__item">Yet Another Action</li>
+                    </ul>
+
                 </div>
+
             </div>
         {% endfor %}
-
     </div>
 {% endblock %}
