@@ -1,5 +1,9 @@
+import itertools
+import operator
+
 import twitter
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from twitter.error import TwitterError
 from django.shortcuts import render
@@ -58,15 +62,23 @@ def post_list(request):
 
 
 def popular_hashtag(request):
-    api = twitter.Api(consumer_key='Hc2uDuKnrBYD8fzkhFw8THOzr',
-                      consumer_secret='ypWJFvpRSNbdAPqXp8me137SuUitTV0xkTC5EWiozYpv2QjM25',
-                      access_token_key='707631903608868869-jvTlyWZChllWMzGOWEsyF0PFrVtLQrI',
-                      access_token_secret='hFqKoa54LF470kSRmzbxnmSkz4SlKBuZlbYfCumDEmLDf')
+    # Create instance of Twitter API
+    api = twitter.Api(settings.CONSUMER_KEY,
+                      settings.CONSUMER_SECRET,
+                      settings.ACCESS_TOKEN_KEY,
+                      settings.ACCESS_TOKEN_SECRET)
+
     hashtags = api.GetTrendsWoeid(woeid=1)
-    return render(request, 'top_twitter/popular_hashtag.html', {'hashtags': hashtags},
+
+    return render(request,
+                  'top_twitter/popular_hashtag.html',
+                  {
+                      'hashtags': hashtags
+                  },
                   RequestContext(request))
 
 
+@login_required
 def add(request):
     # Create instance of Twitter API
     api = twitter.Api(settings.CONSUMER_KEY,
@@ -108,6 +120,7 @@ def add(request):
     for tweet in tweets:
         try:
             tweet_db_entry = Tweet.objects.create(
+                # Don't forget to parse date
                 created_at=parse(tweet.created_at).strftime("%Y-%m-%d %H:%M:%S"),
                 favorite_count=tweet.favorite_count,
                 id=tweet.id,
@@ -138,6 +151,7 @@ def add(request):
             tweet_db_entry.user = User.objects.create(
                 tweet=tweet_db_entry,
 
+                # Don't forget to parse date
                 created_at=parse(tweet.user.created_at).strftime("%Y-%m-%d %H:%M:%S"),
                 description=tweet.user.description,
                 favourites_count=tweet.user.favourites_count,
@@ -175,14 +189,57 @@ def add(request):
                         screen_name=usermention.screen_name
                     ))
 
+                # Save entry to database
                 tweet_db_entry.save()
         except IntegrityError:
+            # Tweet id duplicated or something like that. Don't mind, continue loop
             continue
 
     return render(request,
-                  'top_twitter/twitter_add.html',
+                  'top_twitter/statistics.html',
                   {
-                      'tweets': Tweet.objects.all(),
+                      'tweets': Tweet.objects.all().order_by('-created_at'),
                       'error': error
+                  },
+                  RequestContext(request))
+
+
+def statistics(request):
+    def most_common_element(list):
+        # get an iterable of (item, iterable) pairs
+        SL = sorted((x, i) for i, x in enumerate(list))
+        # print 'SL:', SL
+        groups = itertools.groupby(SL, key=operator.itemgetter(0))
+
+        # auxiliary function to get "quality" for an item
+        def _auxfun(g):
+            item, iterable = g
+            count = 0
+            min_index = len(list)
+            for _, where in iterable:
+                count += 1
+                min_index = min(min_index, where)
+            # print 'item %r, count %r, minind %r' % (item, count, min_index)
+            return count, -min_index
+
+        # pick the highest-count/earliest item
+        return max(groups, key=_auxfun)[0]
+
+    # Create hashtag list
+    hashtag_set = []
+
+    # Collect all hashtags
+    for tweet in Tweet.objects.all():
+        for tweet_hashtag in tweet.hashtag_set.all():
+            hashtag_set.append(tweet_hashtag.text)
+
+    # Find the most common hashtag
+    popular_hashtag = most_common_element(hashtag_set)
+
+    return render(request,
+                  'top_twitter/statistics.html',
+                  {
+                      'tweets': Tweet.objects.all().order_by('-created_at'),
+                      'popular_hashtag': popular_hashtag
                   },
                   RequestContext(request))

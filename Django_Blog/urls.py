@@ -21,6 +21,7 @@ from blog import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/', include(admin.site.urls)),
     url(r'^$', views.post_list, name='post_list'),
     url(r'^contact/', views.contact, name='contact'),
     url(r'^apps/(?P<post_id>[0-9]+)/$', views.post_page, name='post_detail'),
