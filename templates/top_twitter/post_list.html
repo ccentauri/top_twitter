@@ -4,6 +4,25 @@
 {% load el_pagination_tags %}
 
 
+{% block head %}
+    <link rel="stylesheet"
+          href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+
+    <!-- Your application bootstrap  -->
+    <script type="text/javascript">
+        /**
+         * You must include the dependency on 'ngMaterial'
+         */
+        angular.module('firstApplication', ['ngMaterial']);
+    </script>
+{% endblock %}
+
+
 {% block content %}
     <script type="text/javascript">
         function openInNewTab(url) {
@@ -13,6 +32,42 @@
         function reloadPage() {
             location.reload()
         }
+    </script>
+
+    {# Angular #}
+    <script type="text/javascript">
+        angular.module('firstApplication', ['ngMaterial'])
+                .controller('AppCtrl', function ($scope, $mdDialog, $mdMedia) {
+                    $scope.status = '  ';
+                    $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
+                    $scope.showAlert = function (ev) {
+                        // Appending dialog to document.body to cover sidenav in docs app
+                        // Modal dialogs should fully cover application
+                        // to prevent interaction outside of dialog
+                        $mdDialog.show(
+                                $mdDialog.alert()
+                                        .parent(angular.element(document.querySelector('#popupContainer')))
+                                        .clickOutsideToClose(true)
+                                        .title('This is an alert title')
+                                        .textContent('You can specify some description text in here.')
+                                        .ariaLabel('Alert Dialog Demo')
+                                        .ok('Got it!')
+                                        .targetEvent(ev)
+                        );
+                    };
+                });
+        function DialogController($scope, $mdDialog) {
+            $scope.hide = function () {
+                $mdDialog.hide();
+            };
+            $scope.cancel = function () {
+                $mdDialog.cancel();
+            };
+            $scope.answer = function (answer) {
+                $mdDialog.hide(answer);
+            };
+        }
+
     </script>
 
     <style>
@@ -76,6 +131,30 @@
             text-align: center;
             padding: 70px 0;
         }
+
+        {# Angular #}
+        .dialogdemoBasicUsage #popupContainer {
+            position: relative;
+        }
+
+        .dialogdemoBasicUsage .footer {
+            width: 100%;
+            text-align: center;
+            margin-left: 20px;
+        }
+
+        .dialogdemoBasicUsage .footer, .dialogdemoBasicUsage .footer > code {
+            font-size: 0.8em;
+            margin-top: 50px;
+        }
+
+        .dialogdemoBasicUsage button {
+            width: 200px;
+        }
+
+        .dialogdemoBasicUsage div#status {
+            color: #c60008;
+        }
     </style>
 
     {% if error %}
@@ -88,7 +167,7 @@
         </div>
     {% endif %}
 
-    <div class="mdl-grid" align="center">
+    <div class="mdl-grid">
 
         {% for tweet in tweets %}
             <div class="card-square mdl-card mdl-shadow--4dp mdl-cell mdl-cell--1-col">
@@ -102,8 +181,6 @@
                              background: url(
                              {% if tweet.user.profile_banner_url %}
                                  {{ tweet.user.profile_banner_url }}
-                             {% elif tweet.user.profile_background_image_url %}
-                                 {{ tweet.user.profile_background_image_url }}
                              {% else %}
                                  {% with "#"|add:tweet.user.profile_background_color as user_bg_color %}
                                      {{ user_bg_color }}
@@ -170,6 +247,15 @@
                         <li disabled class="mdl-menu__item">Disabled Action</li>
                         <li class="mdl-menu__item">Yet Another Action</li>
                     </ul>
+
+                    <div ng-controller="AppCtrl" class="md-padding" id="popupContainer" ng-cloak>
+                        <div class="dialog-demo-content" layout="row" layout-wrap layout-margin
+                             layout-align="center">
+                            <md-button class="md-primary md-raised" ng-click="showAlert($event)">
+                                Alert Dialog
+                            </md-button>
+                        </div>
+                    </div>
 
                 </div>
 
