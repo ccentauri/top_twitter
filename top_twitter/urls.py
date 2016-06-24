@@ -6,5 +6,5 @@ urlpatterns = [
     url(r'^tags/', views.popular_hashtag, name='popular_hashtag'),
 
     # Remove before deploying!
-    url(r'^angular/', views.angular, name='angular'),
+    url(r'^add/', views.add, name='add'),
 ]

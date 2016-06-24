@@ -21,13 +21,17 @@ def urlize_tweet_text(tweet):
         from urllib import quote
     except ImportError:
         from urllib.parse import quote
+
     hashtag_url = '<a href="https://twitter.com/search?q=%%23%s" target="_blank">#%s</a>'
     user_url = '<a href="https://twitter.com/%s" target="_blank">@%s</a>'
     text = tweet.text
-    for hash in tweet.hashtags:
+
+    for hash in tweet.hashtag_set.all():
         text = text.replace('#%s' % hash.text, hashtag_url % (quote(hash.text.encode("utf-8")), hash.text))
-    for mention in tweet.user_mentions:
+
+    for mention in tweet.usermention_set.all():
         text = text.replace('@%s' % mention.screen_name, user_url % (quote(mention.screen_name), mention.screen_name))
+        
     return text
 
 
@@ -37,7 +41,7 @@ def expand_tweet_urls(tweet):
         Should be used before urlize_tweet
     """
     text = tweet.text
-    urls = tweet.urls
+    urls = tweet.url_set.all()
     for url in urls:
         text = text.replace(url.url, '<a href="%s" target="_blank">%s</a>' % (url.expanded_url, url.url))
     tweet.text = text

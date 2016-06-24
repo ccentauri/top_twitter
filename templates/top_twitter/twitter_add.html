@@ -2,7 +2,6 @@
 {% load staticfiles %}
 {% load twitter_tags %}
 {% load el_pagination_tags %}
-{% csrf_token %}
 
 
 {% block head %}
@@ -35,30 +34,6 @@
         }
     </script>
 
-    <script type="text/javascript">
-        function syntaxHighlight(json) {
-            if (typeof json != 'string') {
-                json = JSON.stringify(json, undefined, 2);
-            }
-            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-                var cls = 'number';
-                if (/^"/.test(match)) {
-                    if (/:$/.test(match)) {
-                        cls = 'key';
-                    } else {
-                        cls = 'string';
-                    }
-                } else if (/true|false/.test(match)) {
-                    cls = 'boolean';
-                } else if (/null/.test(match)) {
-                    cls = 'null';
-                }
-                return '<span class="' + cls + '">' + match + '</span>';
-            });
-        }
-    </script>
-
     {# Angular #}
     <script type="text/javascript">
         angular.module('firstApplication', ['ngMaterial'])
@@ -66,6 +41,7 @@
                     $scope.status = '  ';
                     $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
                     $scope.showAlert = function (ev, content) {
+                        var json_content = JSON.stringify(JSON.parse(content), null, 2);
                         $mdDialog.show(
                                 $mdDialog.alert()
                                         .parent(angular.element(document.querySelector('#popupContainer')))
@@ -226,7 +202,7 @@
                 </div>
 
                 <div class="mdl-card__supporting-text">
-                    {{ tweet|expand_tweet_urls|urlize_tweet_text|safe }}
+                    {{ tweet.text|safe }}
                 </div>
 
                 <div class="mdl-card__actions mdl-card--border">

@@ -1,7 +1,7 @@
 from django.contrib import admin
-from top_twitter.models import Post
+from top_twitter.models import Tweet
 
 
-@admin.register(Post)
+@admin.register(Tweet)
 class Admin(admin.ModelAdmin):
-    list_display = ('author_name',)
+    list_display = ('id',)
