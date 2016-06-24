@@ -78,8 +78,7 @@ def popular_hashtag(request):
                   RequestContext(request))
 
 
-@login_required
-def add(request):
+def add_tweets(hashtag_number, tweets_number):
     # Create instance of Twitter API
     api = twitter.Api(settings.CONSUMER_KEY,
                       settings.CONSUMER_SECRET,
@@ -96,25 +95,15 @@ def add(request):
 
     # Create list of tweets
     tweets = []
-    error = False
 
-    # Check if we have any hashtags in list
-    if trends:
-        # Get only first 10 top-hashtags and delete rest
-        del trends[9:len(trends) - 1]
+    logging.info(len(trends))
+    # Get only first 10 top-hashtags and delete rest
+    del trends[int(hashtag_number):len(trends) - 1]
 
-        # Find the latest tweets for hashtag
-        for trend in trends:
-            # Try to get tweets.
-            # Catching TwitterError ('Rate limit exceeded', etc)
-            try:
-                tweets.extend(
-                    api.GetSearch(result_type='popular', term=trend.query, count=settings.TWEETS_LOADING_NUMBER))
-            except TwitterError:
-                error = True
-    else:
-        # If trends list is empty - error was occurred
-        error = True
+    for trend in trends:
+        # Try to get tweets.
+        new_tweets = api.GetSearch(result_type='popular', term=trend.query, count=int(tweets_number))
+        tweets.extend(new_tweets)
 
     # Adding new tweets in database
     for tweet in tweets:
@@ -195,35 +184,35 @@ def add(request):
             # Tweet id duplicated or something like that. Don't mind, continue loop
             continue
 
-    return render(request,
-                  'top_twitter/statistics.html',
-                  {
-                      'tweets': Tweet.objects.all().order_by('-created_at'),
-                      'error': error
-                  },
-                  RequestContext(request))
+
+def delete_tweets_all():
+    Tweet.objects.all().delete()
 
 
+@login_required
 def statistics(request):
-    def most_common_element(list):
-        # get an iterable of (item, iterable) pairs
-        SL = sorted((x, i) for i, x in enumerate(list))
-        # print 'SL:', SL
-        groups = itertools.groupby(SL, key=operator.itemgetter(0))
+    def most_common_element(search_list):
+        try:
+            # get an iterable of (item, iterable) pairs
+            SL = sorted((x, i) for i, x in enumerate(search_list))
+            # print 'SL:', SL
+            groups = itertools.groupby(SL, key=operator.itemgetter(0))
 
-        # auxiliary function to get "quality" for an item
-        def _auxfun(g):
-            item, iterable = g
-            count = 0
-            min_index = len(list)
-            for _, where in iterable:
-                count += 1
-                min_index = min(min_index, where)
-            # print 'item %r, count %r, minind %r' % (item, count, min_index)
-            return count, -min_index
+            # auxiliary function to get "quality" for an item
+            def _auxfun(g):
+                item, iterable = g
+                count = 0
+                min_index = len(search_list)
+                for _, where in iterable:
+                    count += 1
+                    min_index = min(min_index, where)
+                # print 'item %r, count %r, minind %r' % (item, count, min_index)
+                return count, -min_index
 
-        # pick the highest-count/earliest item
-        return max(groups, key=_auxfun)[0]
+            # pick the highest-count/earliest item
+            return max(groups, key=_auxfun)[0]
+        except ValueError:
+            return 'hashtag'
 
     # Create hashtag list
     hashtag_set = []
@@ -236,10 +225,21 @@ def statistics(request):
     # Find the most common hashtag
     popular_hashtag = most_common_element(hashtag_set)
 
+    # Check is user wants to add more tweets
+    if request.method == 'POST':
+        if request.POST.get('hashtag_number'):
+            add_tweets(request.POST.get('hashtag_number'), request.POST.get('tweets_number'))
+
+    # Check is user wants to delete tweets
+    if request.method == 'POST':
+        if request.POST.get('action') == 'delete_all':
+            delete_tweets_all()
+
     return render(request,
                   'top_twitter/statistics.html',
                   {
                       'tweets': Tweet.objects.all().order_by('-created_at'),
-                      'popular_hashtag': popular_hashtag
+                      'popular_hashtag': popular_hashtag,
+                      'added_successful': True
                   },
                   RequestContext(request))

@@ -227,6 +227,9 @@
 
                 <div class="mdl-card__supporting-text">
                     {{ tweet|expand_tweet_urls|urlize_tweet_text|safe }}
+                    <br/>
+                    {{ tweet.user.profile_banner_url }}
+                    {{ tweet.user.profile_background_color }}
                 </div>
 
                 <div class="mdl-card__actions mdl-card--border">

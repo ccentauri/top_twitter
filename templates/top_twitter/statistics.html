@@ -70,8 +70,6 @@
 
     <style>
         .card-square.mdl-card {
-            width: 30%;
-            height: auto;
         }
 
         .card-square > .mdl-card__supporting-text {
@@ -82,6 +80,7 @@
         }
 
         .mdl-grid {
+            max-width: 80%;
             width: 80%;
             text-align: center;
         }
@@ -108,7 +107,7 @@
 
     <h3 align="left" style="margin-left: 10%">Statistics</h3>
     <div class="mdl-grid">
-        <div class="card-square mdl-card mdl-shadow--8dp mdl-cell mdl-cell--1-col">
+        <div class="card-square mdl-card mdl-shadow--8dp mdl-cell mdl-cell--4-col">
             <div class="mdl-card__title mdl-card--expand mdl-shadow--2dp"
                  style="
                         height: 100px;
@@ -124,7 +123,7 @@
             </div>
         </div>
 
-        <div class="card-square mdl-card mdl-shadow--8dp mdl-cell mdl-cell--1-col">
+        <div class="card-square mdl-card mdl-shadow--8dp mdl-cell mdl-cell--4-col">
             <div class="mdl-card__title mdl-card--expand mdl-shadow--2dp"
                  style="
                         height: 100px;
@@ -140,7 +139,7 @@
             </div>
         </div>
 
-        <div class="card-square mdl-card mdl-shadow--8dp mdl-cell mdl-cell--1-col">
+        <div class="card-square mdl-card mdl-shadow--8dp mdl-cell mdl-cell--4-col">
             <div class="mdl-card__title mdl-card--expand mdl-shadow--2dp"
                  style="
                         height: 100px;
@@ -162,7 +161,7 @@
     <h3 align="left" style="margin-left: 10%">Actions</h3>
 
     <div class="mdl-grid">
-        <div class="card-square mdl-card mdl-shadow--8dp mdl-cell mdl-cell--1-col">
+        <div class="card-square mdl-card mdl-shadow--8dp mdl-cell mdl-cell--4-col">
             <div class="mdl-card__title mdl-card--expand mdl-shadow--2dp"
                  style="
                         height: 100px;
@@ -173,15 +172,63 @@
                 <h2 class="mdl-card__title-text">Add new tweets</h2>
             </div>
 
-            <div class="mdl-card__supporting-text">
-                <h6>Search and add new tweets</h6>
+            <form action="
+                    {% with SITE_URL|add:"/twitter/statistics/" as add_tweet_url %}{{ add_tweet_url }}{% endwith %}"
+                  method="post">
+                {% csrf_token %}
+                <div class="mdl-card__supporting-text">
+                    <h5>Search and add new tweets</h5>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 80%">
+                        <input name="hashtag_number" class="mdl-textfield__input" type="text"
+                               pattern="-?[0-9]*(\.[0-9]+)?"
+                               id="sample4">
+                        <label class="mdl-textfield__label" for="sample4">Number of hashtags to load [10-50]</label>
+                        <span class="mdl-textfield__error">Input is not a number!</span>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 80%">
+                        <input name="tweets_number" class="mdl-textfield__input" type="text"
+                               pattern="-?[0-9]*(\.[0-9]+)?"
+                               id="sample5">
+                        <label class="mdl-textfield__label" for="sample5">Number of tweets to load [10-50]</label>
+                        <span class="mdl-textfield__error">Input is not a number!</span>
+                    </div>
+                </div>
+
+                <div class="mdl-card__actions mdl-card--border">
+                    <button class="mdl-button mdl-js-button mdl-button--primary">
+                        Add
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-square mdl-card mdl-shadow--8dp mdl-cell mdl-cell--4-col">
+            <div class="mdl-card__title mdl-card--expand mdl-shadow--2dp"
+                 style="
+                        height: 100px;
+                        width: 100%;
+                        color: #fff;
+                        background-color: #F44336;
+                       ">
+                <h2 class="mdl-card__title-text">Delete all tweets</h2>
             </div>
 
-            <div class="mdl-card__actions mdl-card--border">
-                <button class="mdl-button mdl-js-button mdl-button--primary">
-                    Add!
-                </button>
-            </div>
+            <form action="
+                    {% with SITE_URL|add:"/twitter/statistics/" as add_tweet_url %}{{ add_tweet_url }}{% endwith %}"
+                  method="post">
+                {% csrf_token %}
+                <div class="mdl-card__supporting-text">
+                    <input type="hidden" name="action" value="delete_all">
+                    <h5>Delete all tweets</h5>
+
+                    <div class="mdl-card__actions mdl-card--border">
+                        <button class="mdl-button mdl-js-button mdl-button--primary">
+                            Delete
+                        </button>
+                    </div>
+            </form>
         </div>
     </div>
 {% endblock %}
