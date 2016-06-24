@@ -50,7 +50,7 @@ def post_list(request):
     return render(request,
                   'top_twitter/post_list.html',
                   {
-                      'tweets': Tweet.objects.all(),
+                      'tweets': Tweet.objects.all().order_by('-created_at'),
                       'trends': [],
                       'error': False
                   },
