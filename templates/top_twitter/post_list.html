@@ -191,6 +191,7 @@
 
     <div class="mdl-grid">
 
+        {% paginate 21,21 tweets %}
         {% for tweet in tweets %}
             <div class="card-square mdl-card mdl-shadow--4dp mdl-cell mdl-cell--1-col">
 
@@ -218,7 +219,8 @@
                                 {% if tweet.user.profile_image_url %}
                                     <img class="user-profile-image" src=" {{ tweet.user.profile_image_url }} ">
                                 {% else %}
-                                    <img class="user-profile-image" src=" {{ MEDIA_URL|add:"uploads/images/account-circle.png" }} ">
+                                    <img class="user-profile-image"
+                                         src=" {{ MEDIA_URL|add:"uploads/images/account-circle.png" }} ">
                                 {% endif %}
                             </a>
                         {% endwith %}
@@ -276,4 +278,7 @@
             </div>
         {% endfor %}
     </div>
+
+    <h6>{% show_more "Load more" "Loading" %}</h6>
+    <br/>
 {% endblock %}

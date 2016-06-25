@@ -1,64 +1,37 @@
 import itertools
 import operator
-
 import twitter
+import logging
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from twitter.error import TwitterError
 from django.shortcuts import render
 from django.template import RequestContext
-import logging
 from dateutil.parser import parse
 
 from top_twitter.models import Tweet, HashTag, UserMention, Url, User
 
 
 def post_list(request):
-    # # Create instance of Twitter API
-    # api = twitter.Api(settings.CONSUMER_KEY,
-    #                   settings.CONSUMER_SECRET,
-    #                   settings.ACCESS_TOKEN_KEY,
-    #                   settings.ACCESS_TOKEN_SECRET)
-    #
-    # # Try to get top hashtags.
-    # # Catching TwitterError ('Rate limit exceeded', etc)
-    # try:
-    #     trends = api.GetTrendsWoeid(woeid=1)
-    # except TwitterError:
-    #     logging.error(TwitterError.message)
-    #     trends = []
-    #
-    # # Create list of tweets
-    # tweets = []
-    # error = False
-    #
-    # # Check if we have any hashtags in list
-    # if trends:
-    #     # Get only first 10 top-hashtags and delete rest
-    #     del trends[9:len(trends) - 1]
-    #
-    #     # Find the latest tweets for hashtag
-    #     for trend in trends:
-    #         # Try to get tweets.
-    #         # Catching TwitterError ('Rate limit exceeded', etc)
-    #         try:
-    #             tweets.append(
-    #                 api.GetSearch(result_type='popular', term=trend.query, count=settings.TWEETS_LOADING_NUMBER))
-    #         except TwitterError:
-    #             error = True
-    # else:
-    #     # If trends list is empty - error was occurred
-    #     error = True
+    template = 'top_twitter/post_list.html'
+
+    context = {
+        'tweets': Tweet.objects.all().order_by('-created_at'),
+        'trends': [],
+        'error': False
+    }
+
+    if request.is_ajax():
+        return render(template,
+                      context,
+                      context_instance=RequestContext(request))
 
     return render(request,
-                  'top_twitter/post_list.html',
-                  {
-                      'tweets': Tweet.objects.all().order_by('-created_at'),
-                      'trends': [],
-                      'error': False
-                  },
-                  RequestContext(request))
+                  template,
+                  context,
+                  context_instance=RequestContext(request))
 
 
 def popular_hashtag(request):
