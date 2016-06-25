@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'n0d^v36p(q*_q4g24sn5)k9%q4%%yd$$+w6c30+)#gvw^x4!r1'
 
-DJANGO_ROOT = 'home/simple/PycharmProjects/Django_Blog/'
+DJANGO_ROOT = '/home/simple/PycharmProjects/Django_Blog/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -47,46 +47,6 @@ INSTALLED_APPS = [
     'top_twitter',
     'blog',
 ]
-
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        },
-        'applogfile': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join("log", 'top_twitter.log'),
-            'maxBytes': 1024 * 1024 * 15,  # 15MB
-            'backupCount': 10,
-        },
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-        'top_twitter': {
-            'handlers': ['applogfile', ],
-            'level': 'DEBUG',
-        },
-    }
-}
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -165,7 +125,9 @@ USE_TZ = True
 
 # Site root URL
 # Don't forget to change it before deployment!
-SITE_URL = 'http://0.0.0.0/'
+SITE_URL = 'http:/0.0.0.0/'
+
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -185,6 +147,10 @@ ADMIN_MEDIA_PREFIX = '/admin-media/'
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_DIRS = (
+    os.path.join(SITE_ROOT, 'static/'),
+)
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

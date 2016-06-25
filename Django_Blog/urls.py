@@ -18,20 +18,21 @@ from django.contrib import admin
 
 from Django_Blog import settings
 from blog import views
+from django.conf.urls.static import static
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/', include(admin.site.urls)),
-    url(r'^$', views.post_list, name='post_list'),
-    url(r'^contact/', views.contact, name='contact'),
-    url(r'^apps/(?P<post_id>[0-9]+)/$', views.post_page, name='post_detail'),
+                  url(r'^admin/', include(admin.site.urls)),
+                  url(r'^accounts/', include(admin.site.urls)),
+                  url(r'^$', views.post_list, name='post_list'),
+                  url(r'^contact/', views.contact, name='contact'),
+                  url(r'^apps/(?P<post_id>[0-9]+)/$', views.post_page, name='post_detail'),
 
-    url(r'^twitter/', include('top_twitter.urls')),
+                  url(r'^twitter/', include('top_twitter.urls')),
 
-    # http://docs.djangoproject.com/en/dev/howto/static-files/
-    # This method is inefficient and insecure.
-    # Do not use this in a production setting.
-    # Use this only for development.
-    url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': settings.MEDIA_ROOT}),
-]
+                  # http://docs.djangoproject.com/en/dev/howto/static-files/
+                  # This method is inefficient and insecure.
+                  # Do not use this in a production setting.
+                  # Use this only for development.
+                  url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+                      {'document_root': settings.MEDIA_ROOT}),
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
