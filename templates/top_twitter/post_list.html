@@ -202,10 +202,12 @@
                              padding: 0;
                              {% if tweet.user.profile_banner_url %}
                                  background: url({{ tweet.user.profile_banner_url }});
-                             {% else %}
+                             {% elif tweet.user.profile_background_color %}
                                  {% with "#"|add:tweet.user.profile_background_color as user_bg_color %}
                                      background: {{ user_bg_color }};
                                  {% endwith %}
+                             {% else %}
+                                 background: #2196F3;
                              {% endif %}
                              background-size: cover">
 
@@ -213,12 +215,11 @@
                         {% with "https://twitter.com/"|add:tweet.user.screen_name as user_profile_url %}
                             <a class="user_profile_link" target="_blank"
                                href="{{ user_profile_url }}">
-                                <img class="user-profile-image" src="{{ tweet.user.profile_image_url }}">
-                                {#                                <h6 class="user-name">#}
-                                {#                                    {% with "@"|add:tweet.user.screen_name as user_screen_name %}#}
-                                {#                                        {{ user_screen_name }}#}
-                                {#                                    {% endwith %}#}
-                                {#                                </h6>#}
+                                {% if tweet.user.profile_image_url %}
+                                    <img class="user-profile-image" src=" {{ tweet.user.profile_image_url }} ">
+                                {% else %}
+                                    <img class="user-profile-image" src=" {{ MEDIA_URL|add:"uploads/images/account-circle.png" }} ">
+                                {% endif %}
                             </a>
                         {% endwith %}
                     </div>
@@ -227,9 +228,6 @@
 
                 <div class="mdl-card__supporting-text">
                     {{ tweet|expand_tweet_urls|urlize_tweet_text|safe }}
-                    <br/>
-                    {{ tweet.user.profile_banner_url }}
-                    {{ tweet.user.profile_background_color }}
                 </div>
 
                 <div class="mdl-card__actions mdl-card--border">
@@ -245,8 +243,8 @@
                     <button class="mdl-button mdl-button--icon"><i class="material-icons">favorite</i></button>
 
                     {# Share button #}
-                    <button id="share-post-{{ tweet.id }}" class="mdl-button mdl-button--icon"><i
-                            class="material-icons">share</i>
+                    <button id="share-post-{{ tweet.id }}" class="mdl-button mdl-button--icon">
+                        <i class="material-icons">share</i>
                     </button>
 
                     {# Menu button #}

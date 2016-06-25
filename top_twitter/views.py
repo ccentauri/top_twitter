@@ -107,6 +107,8 @@ def add_tweets(hashtag_number, tweets_number):
 
     # Adding new tweets in database
     for tweet in tweets:
+        if tweet.user.profile_banner_url == '' and tweet.user.profile_background_color == '':
+            continue
         try:
             tweet_db_entry = Tweet.objects.create(
                 # Don't forget to parse date

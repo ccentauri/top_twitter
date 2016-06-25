@@ -5,8 +5,8 @@ class Tweet(models.Model):
     created_at = models.DateTimeField()
     favorite_count = models.IntegerField()
     id = models.IntegerField(primary_key=True, unique=True, db_index=True)
-    id_str = models.CharField(max_length=200)
-    lang = models.CharField(max_length=200)
+    id_str = models.CharField(max_length=2000)
+    lang = models.CharField(max_length=2000)
     retweet_count = models.IntegerField()
     source = models.TextField()
     text = models.TextField()
@@ -15,14 +15,14 @@ class Tweet(models.Model):
 class HashTag(models.Model):
     tweet = models.ForeignKey(Tweet)
 
-    text = models.CharField(max_length=200)
+    text = models.CharField(max_length=2000)
 
 
 class Url(models.Model):
     tweet = models.ForeignKey(Tweet)
 
-    url = models.CharField(max_length=300)
-    expanded_url = models.CharField(max_length=300)
+    url = models.CharField(max_length=3000)
+    expanded_url = models.CharField(max_length=3000)
 
 
 class User(models.Model):
@@ -35,22 +35,22 @@ class User(models.Model):
     friends_count = models.IntegerField()
     geo_enabled = models.BooleanField()
     id = models.IntegerField()
-    lang = models.CharField(max_length=300)
+    lang = models.CharField(max_length=3000)
     listed_count = models.IntegerField()
-    location = models.CharField(max_length=300)
-    name = models.CharField(max_length=300)
-    profile_background_color = models.CharField(max_length=300)
-    profile_background_image_url = models.CharField(max_length=300)
-    profile_background_tile = models.CharField(max_length=300)
-    profile_banner_url = models.CharField(max_length=300)
-    profile_image_url = models.CharField(max_length=300)
-    profile_link_color = models.CharField(max_length=300)
-    profile_sidebar_fill_color = models.CharField(max_length=300)
-    profile_text_color = models.CharField(max_length=300)
-    screen_name = models.CharField(max_length=300)
-    statuses_count = models.CharField(max_length=300)
-    time_zone = models.CharField(max_length=300)
-    url = models.CharField(max_length=300)
+    location = models.CharField(max_length=3000)
+    name = models.CharField(max_length=3000)
+    profile_background_color = models.CharField(max_length=3000)
+    profile_background_image_url = models.CharField(max_length=3000)
+    profile_background_tile = models.CharField(max_length=3000)
+    profile_banner_url = models.CharField(max_length=3000)
+    profile_image_url = models.CharField(max_length=3000)
+    profile_link_color = models.CharField(max_length=3000)
+    profile_sidebar_fill_color = models.CharField(max_length=3000)
+    profile_text_color = models.CharField(max_length=3000)
+    screen_name = models.CharField(max_length=3000)
+    statuses_count = models.CharField(max_length=3000)
+    time_zone = models.CharField(max_length=3000)
+    url = models.CharField(max_length=3000)
     utc_offset = models.IntegerField()
     verified = models.BooleanField()
 
