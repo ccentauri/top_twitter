@@ -54,5 +54,5 @@ smoke-zephyr==1.0.2
 sqlparse==0.1.18
 termineter==0.2.5
 tweepy==3.5.0
-urllib3==1.15.1
+urllib3==1.26.5
 wcwidth==0.1.6
