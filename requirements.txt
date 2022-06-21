@@ -23,7 +23,7 @@ django-taggit==0.20.0
 future==0.15.2
 louis==2.6.4
 matplotlib==1.5.2rc2
-numpy==1.11.1rc1
+numpy==1.22.0rc1
 oauthlib==1.1.2
 Pillow==3.2.0
 prompt-toolkit==1.0.0
